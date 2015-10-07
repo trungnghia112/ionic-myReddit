@@ -2,15 +2,15 @@
 
     var app = angular.module('myreddit', ['ionic'])
 
-        app.controller('RedditCtrl', function($scope){
-            $scope.stories = [
-                {
-                    title: 'First Story'
-                },
-                {
-                    title: 'Second Story'
-                }
-            ];
+        app.controller('RedditCtrl', function($http, $scope){
+            $scope.stories = [];
+            $http.get('https://www.reddit.com/r/gaming/.json')
+                .success(function(response){
+                    console.log(response);
+                    angular.forEach(response.data.children, function(child){
+                        $scope.stories.push(child.data);
+                    });
+                });
         });
 
         app.run(function ($ionicPlatform) {
