@@ -1,13 +1,15 @@
 (function () {
 
-    var app = angular.module('myreddit', ['ionic'])
+    var app = angular.module('myreddit', ['ionic','angularMoment'])
 
         app.controller('RedditCtrl', function($http, $scope){
             $scope.stories = [];
-            $http.get('https://www.reddit.com/r/gaming/.json')
+
+            $http.get('https://www.reddit.com/r/android/.json?limit=6')
                 .success(function(response){
                     console.log(response);
                     angular.forEach(response.data.children, function(child){
+                        console.log(child.data);
                         $scope.stories.push(child.data);
                     });
                 });
