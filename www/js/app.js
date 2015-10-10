@@ -5,7 +5,17 @@
         app.controller('RedditCtrl', function($http, $scope){
             $scope.stories = [];
 
-
+            function loadStories(params, callback){
+                //$http.get('https://www.reddit.com/r/funny/.json?limit=6&before=t3_3o61h9',{params:params})
+                $http.get('https://www.reddit.com/r/funny/new/.json',{params:params})
+                    .success(function(response){
+                        var stories = [];
+                        angular.forEach(response.data.children, function(child){
+                            stories.push(child.data);
+                        });
+                        callback(stories);
+                    });
+            }
             /*
             * Load more stories
             */
@@ -14,19 +24,24 @@
                 if($scope.stories.length > 0){
                     params['after'] = $scope.stories[$scope.stories.length - 1].name;
                 }
+                loadStories(params, function(data){
+                    console.log(data);
+                    $scope.stories = $scope.stories.concat(data);
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                })
+            };
+            /*
+             * Do refresh stories
+             */
+            $scope.doRefreshStories = function(){
+                var params = {}
+                params['before'] = $scope.stories[0].name;
 
-                //console.log(params);
-
-                $http.get('https://www.reddit.com/r/funny/.json?limit=6',{params:params})
-                    .success(function(response){
-                        //console.log(response);
-                        angular.forEach(response.data.children, function(child){
-                            //console.log(child.data);
-                            $scope.stories.push(child.data);
-                        });
-                        $scope.$broadcast('scroll.infiniteScrollComplete');
-                    });
-
+                loadStories(params, function(data){
+                    console.log(data);
+                    $scope.stories = data.concat($scope.stories);
+                    $scope.$broadcast('scroll.refreshComplete');
+                })
             };
 
 
