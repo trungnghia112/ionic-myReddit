@@ -5,14 +5,31 @@
         app.controller('RedditCtrl', function($http, $scope){
             $scope.stories = [];
 
-            $http.get('https://www.reddit.com/r/android/.json?limit=6')
-                .success(function(response){
-                    console.log(response);
-                    angular.forEach(response.data.children, function(child){
-                        console.log(child.data);
-                        $scope.stories.push(child.data);
+
+            /*
+            * Load more stories
+            */
+            $scope.loadMoreStories = function(){
+                var params = {}
+                if($scope.stories.length > 0){
+                    params['after'] = $scope.stories[$scope.stories.length - 1].name;
+                }
+
+                //console.log(params);
+
+                $http.get('https://www.reddit.com/r/funny/.json?limit=6',{params:params})
+                    .success(function(response){
+                        //console.log(response);
+                        angular.forEach(response.data.children, function(child){
+                            //console.log(child.data);
+                            $scope.stories.push(child.data);
+                        });
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
                     });
-                });
+
+            };
+
+
         });
 
         app.run(function ($ionicPlatform) {
