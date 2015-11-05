@@ -35,8 +35,8 @@
         </ion-refresher>
         <div class="list">
             <div ng-repeat="story in stories">
-                <a class="item item-thumbnail-left" href="{{story.url}}" target="_blank">
-                    <img ng-src="{{story.thumbnail}}" ng-if="story.thumbnail.startsWith('http')" alt="">
+                <a class="item item-thumbnail-left" ng-click="openLink(story.url)" href="javascript:;">
+                    <img ng-src="{{story.thumbnail}}" alt="">
 
                     <h2>{{story.title}}</h2>
 

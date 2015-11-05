@@ -44,6 +44,10 @@
                 })
             };
 
+            $scope.openLink = function(url){
+                window.open(url, '_blank');
+            };
+
 
         });
 
@@ -51,6 +55,9 @@
             $ionicPlatform.ready(function () {
                 if (window.cordova && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                }
+                if (window.cordova && window.cordova.plugins.InAppBrowser) {
+                    window.open = window.cordova.InAppBrowser.open;
                 }
                 if (window.StatusBar) {
                     StatusBar.styleDefault();
